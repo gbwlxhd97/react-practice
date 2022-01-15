@@ -1,26 +1,47 @@
-import styled from "styled-components";
+import styled,{keyframes} from "styled-components";
 
-const Father = styled.div`
+const Wrap = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
 `;
 
-const Btn = styled.button`
-  background-color: red;
+const animation = keyframes`
+  to {
+    transform:rotate(0deg)
+  }
+  from {
+    transform:rotate(360deg)
+  }
 `;
 
-const Input = styled.input.attrs({required: true, maxLength:10})`
-
+const Title = styled.div`
+  color: aqua;
 `;
+
+const Box = styled.div`
+  height: 200px;
+  width: 100px;
+  background-color: tomato;
+  animation: ${animation} 1s linear;
+  ${Title} {
+    &:hover {
+      color: blue;
+    }
+  }
+`;
+
+
 
 function App() {
   return (
-    <Father>
-      <Btn/>
-      123
-      <Btn as="a" href="www.naver.com">hi~</Btn>
-      <Input/>
-      <Input/>
-    </Father>
+    <Wrap>
+      <Box>
+        <Title>hi~~</Title>
+      </Box>
+    </Wrap>
   );
 }
 
