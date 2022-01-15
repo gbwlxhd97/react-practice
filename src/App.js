@@ -3,20 +3,23 @@ import styled from "styled-components";
 const Father = styled.div`
   display: flex;
 `;
-const Box = styled.div`
-  background-color: ${(props) => props.bgColor};
-  width: 100px;
-  height: 100px;
+
+const Btn = styled.button`
+  background-color: red;
 `;
-const Circle = styled(Box)`
-  border-radius: 50px;
+
+const Input = styled.input.attrs({required: true, maxLength:10})`
+
 `;
 
 function App() {
   return (
     <Father>
-      <Box bgColor="teal" />
-      <Circle bgColor="tomato" />
+      <Btn/>
+      123
+      <Btn as="a" href="www.naver.com">hi~</Btn>
+      <Input/>
+      <Input/>
     </Father>
   );
 }
