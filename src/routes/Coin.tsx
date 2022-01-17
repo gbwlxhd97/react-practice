@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router";
+import {Switch,Route, useLocation, useParams } from "react-router";
 import styled from "styled-components";
+import Chart from './Chart';
+import Price from './Price';
 
 const Title = styled.h1`
     font-size: 48px;
@@ -25,6 +27,22 @@ const Header = styled.header`
     align-items: center;
 `;
 
+const OverViewWrap = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    padding: 10px 20px;
+    border-radius:10px;
+    background-color: blueviolet;
+    margin: 20px 0px;
+`;
+
+const OverViewItem = styled.div`
+    text-align: center;
+`
+const Description = styled.div`
+    margin: 0 auto;
+`;
 interface RouteParams {
     coinId: string;
 }
@@ -103,14 +121,53 @@ function Coin() {
         ).json();
         setInfo(infoData);
         setPriceInfo(priceData);
+        setLoading(false)
         })();
-    }, []);
+    }, [coinId]);
     return (
         <Container>
         <Header>
             <Title>{state?.name || "Loading..."}</Title>
         </Header>
-        {loading ? <Loader>Loading...</Loader> : null}
+        {loading ? <Loader>Loading...</Loader> : (
+        <>
+        <OverViewWrap>
+            <OverViewItem>
+                <div>RANK</div>
+                <div>{info?.rank}</div>
+            </OverViewItem>
+            <OverViewItem>
+                <div>SYMBOL</div>
+                <div>{info?.symbol}</div>    
+            </OverViewItem>
+            <OverViewItem>
+                <div>Open Source</div>
+                <div>{info?.open_source ? "Yes" : "No"}</div>    
+            </OverViewItem>    
+        </OverViewWrap>
+        <Description>
+            {info?.description}
+        </Description>
+        <OverViewWrap>
+            <OverViewItem>
+                <div>TOTAL SUPPLY</div>
+                <div>{priceInfo?.total_supply}</div>   
+            </OverViewItem>
+            <OverViewItem>
+                <div>MAX SUPPLY</div>
+                <div>{priceInfo?.max_supply}</div>
+            </OverViewItem>
+        </OverViewWrap>
+        <Switch>
+            <Route path={`/${coinId}/price`}>
+                <Price />
+            </Route>
+            <Route path={`/${coinId}/chart`}>
+                <Chart />
+            </Route>
+        </Switch>
+        </>
+        )}
         </Container>
     );
 }
