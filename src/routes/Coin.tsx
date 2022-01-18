@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import {Switch,Route, useLocation, useParams } from "react-router";
+import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import Chart from './Chart';
 import Price from './Price';
-import { Link, useRouteMatch } from "react-router-dom";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 const Title = styled.h1`
     font-size: 48px;
@@ -130,26 +131,19 @@ interface PriceData {
 }
 
 function Coin() {
-    const [loading, setLoading] = useState(true);
-    const { coinId } = useParams<RouteParams>();
     const { state } = useLocation<RouteState>();
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
+    const { coinId } = useParams<RouteParams>();
     const priceMatch = useRouteMatch("/:coinId/price");
     const chartMatch = useRouteMatch("/:coinId/chart");
-    useEffect(() => {
-        (async () => {
-        const infoData = await (
-            await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-        ).json();
-        const priceData = await (
-            await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-        ).json();
-        setInfo(infoData);
-        setPriceInfo(priceData);
-        setLoading(false)
-        })();
-    }, [coinId]);
+    const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+        ["info", coinId],
+        () => fetchCoinInfo(coinId)
+        );
+    const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+        ["tickers", coinId],
+        () => fetchCoinTickers(coinId)
+        );
+    const loading = infoLoading || tickersLoading;
     return (
         <Container>
         <Header>
@@ -160,28 +154,28 @@ function Coin() {
         <OverViewWrap>
             <OverViewItem>
                 <div>RANK</div>
-                <div>{info?.rank}</div>
+                <div>{infoData?.rank}</div>
             </OverViewItem>
             <OverViewItem>
                 <div>SYMBOL</div>
-                <div>{info?.symbol}</div>    
+                <div>{infoData?.symbol}</div>    
             </OverViewItem>
             <OverViewItem>
                 <div>Open Source</div>
-                <div>{info?.open_source ? "Yes" : "No"}</div>    
+                <div>{infoData?.open_source ? "Yes" : "No"}</div>    
             </OverViewItem>    
         </OverViewWrap>
         <Description>
-            {info?.description}
+            {infoData?.description}
         </Description>
         <OverViewWrap>
             <OverViewItem>
                 <div>TOTAL SUPPLY</div>
-                <div>{priceInfo?.total_supply}</div>   
+                <div>{tickersData?.total_supply}</div>   
             </OverViewItem>
             <OverViewItem>
                 <div>MAX SUPPLY</div>
-                <div>{priceInfo?.max_supply}</div>
+                <div>{tickersData?.max_supply}</div>
             </OverViewItem>
         </OverViewWrap>
 
