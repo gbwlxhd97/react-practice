@@ -74,7 +74,13 @@ function ToDoList() {
             />
             <span>{errors?.email?.message}</span>
             <input
-                {...register("firstName", { required: "write here" })}
+                {...register("firstName", {
+                    required: "write here",
+                    validate: {
+                    noCute: (value) =>
+                        value.includes("cute") ? "no cute allowed" : true
+                    },
+                })}
                 placeholder="First Name"
             />
             <span>{errors?.firstName?.message}</span>
