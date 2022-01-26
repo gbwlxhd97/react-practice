@@ -6,6 +6,12 @@ export interface IToDo {
     category: "TO_DO" | "DOING" | "DONE";
 }
 
+export enum Categories {
+    "TO_DO" = "TO_DO",
+    "DOING" = "DOING",
+    "DONE" = "DONE",
+}
+
 export const toDoState = atom<IToDo[]>({
     key: "toDo",
     default: [],
@@ -13,7 +19,7 @@ export const toDoState = atom<IToDo[]>({
 
 export const categoryState = atom({
     key: "category",
-    default: "TO_DO",
+    default: Categories.TO_DO,
 });
 
 export const toDoSelector = selector({
