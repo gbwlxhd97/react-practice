@@ -7,27 +7,28 @@ const Card = styled.div<{ isDragging: boolean }>`
     margin-bottom: 5px;
     padding: 10px;
     background-color: ${(props) =>
-    props.isDragging ? "#e4f2ff" : props.theme.cardColor};
+        props.isDragging ? "#e4f2ff" : props.theme.cardColor};
     box-shadow: ${(props) =>
-    props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
+        props.isDragging ? "0px 2px 5px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
 interface IDragabbleCardProps {
-    toDo: string;
+    toDoId: number;
+    toDoText: string;
     index: number;
 }
 
-function DragabbleCard({ toDo, index }: IDragabbleCardProps) {
+function DragabbleCard({ toDoId, toDoText, index }: IDragabbleCardProps) {
     return (
-        <Draggable draggableId={toDo} index={index}>
-        {(magic,snapshot) => (
+        <Draggable draggableId={toDoId + ""} index={index}>
+        {(magic, snapshot) => (
             <Card
             isDragging={snapshot.isDragging}
             ref={magic.innerRef}
             {...magic.dragHandleProps}
             {...magic.draggableProps}
             >
-            {toDo}
+            {toDoText}
             </Card>
         )}
         </Draggable>
